@@ -26,7 +26,7 @@ const Layout = ({ children }) => {
             <button className="theme-toggle" onClick={toggleTheme}>
               {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
             </button>
-            <a href="#" className="github-link">
+            <a href="https://github.com/condrado/front-tools" target="_blank" rel="noopener noreferrer" className="github-link">
               <Github size={20} />
             </a>
           </div>
