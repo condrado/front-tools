@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && rm -rf docs && cp -R dist docs",
-    "build:watch": "vite build --watch",
-    "watch": "concurrently -n 'DEV,BUILD' -c 'cyan.bold,yellow.bold' \"npm run dev\" \"npm run build:watch\"",
+    "build": "vite build",
+    "watch": "concurrently -n 'DEV,BUILD' -c 'cyan.bold,yellow.bold' \"npm run dev\" \"vite build --watch\"",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
