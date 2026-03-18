@@ -70,7 +70,7 @@ body {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
+  grid-template-columns: repeat(var(--cols, 3), 1fr);
   grid-auto-rows: 60px;
   gap: 1rem;
   width: 100%;
@@ -122,21 +122,21 @@ body {
   overflow: visible;
 }
 
-.card[data-col="1"] { --rows: 1; }
-.card[data-col="2"] { --rows: 2; }
-.card[data-col="3"] { --rows: 3; }
-.card[data-col="4"] { --rows: 4; }
-.card[data-col="5"] { --rows: 5; }
-.card[data-col="6"] { --rows: 6; }
-.card[data-col="7"] { --rows: 7; }
-.card[data-col="8"] { --rows: 8; }
-.card[data-col="9"] { --rows: 9; }
-.card[data-col="10"] { --rows: 10; }
-.card[data-col="11"] { --rows: 11; }
-.card[data-col="12"] { --rows: 12; }
-.card[data-col="13"] { --rows: 13; }
-.card[data-col="14"] { --rows: 14; }
-.card[data-col="15"] { --rows: 15; }
+.card[data-h="1"] { --rows: 1; }
+.card[data-h="2"] { --rows: 2; }
+.card[data-h="3"] { --rows: 3; }
+.card[data-h="4"] { --rows: 4; }
+.card[data-h="5"] { --rows: 5; }
+.card[data-h="6"] { --rows: 6; }
+.card[data-h="7"] { --rows: 7; }
+.card[data-h="8"] { --rows: 8; }
+.card[data-h="9"] { --rows: 9; }
+.card[data-h="10"] { --rows: 10; }
+.card[data-h="11"] { --rows: 11; }
+.card[data-h="12"] { --rows: 12; }
+.card[data-h="13"] { --rows: 13; }
+.card[data-h="14"] { --rows: 14; }
+.card[data-h="15"] { --rows: 15; }
 
 .widget-wrapper:hover .card,
 .widget-wrapper:hover .drag-handle {
@@ -197,9 +197,9 @@ body {
   letter-spacing: 0.05em;
 }
 
-input {
+input, select {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: var(--card-bg);
@@ -209,7 +209,7 @@ input {
   transition: var(--transition);
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: var(--accent-color);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
@@ -251,4 +251,12 @@ button:hover {
   background: var(--hover-color);
   color: var(--accent-color);
   transform: translateY(0);
+}
+
+.widget-preview {
+  background: var(--bg-color);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  margin-bottom: 1rem;
 }

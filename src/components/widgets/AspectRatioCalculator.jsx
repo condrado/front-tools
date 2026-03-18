@@ -3,7 +3,7 @@ import { Maximize2, MoveDiagonal, Copy, Check } from 'lucide-react'
 import Modal from '../Modal'
 import { usePersistentState } from '../../hooks/usePersistentState'
 
-const AspectRatioCalculator = () => {
+const AspectRatioCalculator = ({ height, width }) => {
   const [state, setState] = usePersistentState('aspect_ratio_calc', {
     w1: 1920,
     h1: 1080,
@@ -80,7 +80,7 @@ const AspectRatioCalculator = () => {
         </div>
       </div>
 
-      <div className="ratio-visualizer">
+      <div className="ratio-visualizer widget-preview">
          <div className="ratio-box-outer">
             <div className="ratio-box-inner" style={{ aspectRatio: `${w1}/${h1}` }}>
                <span>{((w1/h1) || 0).toFixed(2)}:1</span>
@@ -113,7 +113,7 @@ const AspectRatioCalculator = () => {
   )
 
   return (
-    <div className="card aspect-ratio-card" data-col="6">
+    <div className="card aspect-ratio-card" data-h={height} data-col={width}>
       <div className="widget-header">
         <h3 className="widget-title">Calculadora de Ratio</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -135,11 +135,10 @@ const AspectRatioCalculator = () => {
           flex-direction: column;
         }
         .section-label {
-          font-size: 0.7rem;
-          text-transform: uppercase;
-          opacity: 0.5;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
+          font-size: 0.75rem;
+          font-weight: 400;
+          opacity: 0.7;
+          margin-bottom: 0.4rem;
         }
         .inputs-row {
           display: flex;
@@ -151,29 +150,23 @@ const AspectRatioCalculator = () => {
           flex: 1;
         }
         .input-field input {
-          padding: 0.5rem !important;
-          font-size: 0.9rem;
           text-align: center;
         }
         .input-field label {
           display: block;
           font-size: 0.75rem;
-          margin-bottom: 0.25rem;
+          font-weight: 400;
           opacity: 0.7;
+          margin-bottom: 0.4rem;
         }
         .separator {
           opacity: 0.5;
           font-weight: bold;
         }
         .ratio-visualizer {
-          background: var(--bg-color);
-          border: 1px dashed var(--border-color);
-          border-radius: 8px;
           height: 140px;
-          display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 1.25rem;
           padding: 1.5rem;
           overflow: hidden;
         }

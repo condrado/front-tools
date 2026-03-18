@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Info, Maximize2, Monitor, Smartphone, Tablet, HelpCircle } from 'lucide-react'
 import Modal from '../Modal'
 
-const BreakpointsInfo = () => {
+const BreakpointsInfo = ({ height, width }) => {
    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
    const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -49,14 +49,12 @@ const BreakpointsInfo = () => {
                   key={bp.name}
                   className={`bp-item ${getCurrentBreakpoint() === bp.name ? 'active' : ''}`}
                >
-                  <div className="bp-header">
-                     <span className="bp-name">{bp.name.toUpperCase()}</span>
-                     <span className="bp-range">{bp.range}px</span>
-                  </div>
+                  <span className="bp-name">{bp.name.toUpperCase()}</span>
                   <div className="bp-desc">
                      {bp.device}
                      <span>{bp.desc}</span>
                   </div>
+                  <span className="bp-range">{bp.range}px</span>
                </div>
             ))}
          </div>
@@ -69,7 +67,7 @@ const BreakpointsInfo = () => {
    )
 
    return (
-      <div className="card breakpoints-card" data-col="7">
+      <div className="card breakpoints-card" data-h={height} data-col={width}>
          <div className="widget-header">
             <h3 className="widget-title">Breakpoints Guide</h3>
             <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -121,7 +119,10 @@ const BreakpointsInfo = () => {
            gap: 0.25rem;
         }
         .bp-item {
-           padding: 0.4rem 0.75rem;
+           display: flex;
+           align-items: center;
+           gap: 0.75rem;
+           padding: 0.5rem 0.75rem;
            border-radius: 6px;
            border: 1px solid transparent;
            opacity: 0.5;
@@ -133,25 +134,22 @@ const BreakpointsInfo = () => {
            border-color: var(--accent-color);
            box-shadow: 0 4px 6px -1px rgba(var(--accent-color-rgb), 0.1);
         }
-        .bp-header {
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           margin-bottom: 0.1rem;
-        }
         .bp-name {
            font-size: 0.75rem;
            font-weight: 700;
-        }
-        .bp-range {
-           font-size: 0.7rem;
-           opacity: 0.6;
+           width: 30px;
         }
         .bp-desc {
            display: flex;
            align-items: center;
            gap: 0.4rem;
            font-size: 0.65rem;
+           flex: 1;
+        }
+        .bp-range {
+           font-size: 0.7rem;
+           opacity: 0.6;
+           text-align: right;
         }
         .custom-info {
            display: flex;

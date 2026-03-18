@@ -3,7 +3,7 @@ import { Copy, Check, Maximize2, LayoutGrid, Rows } from 'lucide-react'
 import Modal from '../Modal'
 import { usePersistentState } from '../../hooks/usePersistentState'
 
-const FlexboxGridPlayground = () => {
+const FlexboxGridPlayground = ({ height, width }) => {
   const [state, setState] = usePersistentState('flex_grid_playground', {
     mode: 'flex',
     flexDirection: 'row',
@@ -81,7 +81,7 @@ const FlexboxGridPlayground = () => {
         </button>
       </div>
 
-      <div className="preview-area">
+      <div className="preview-area widget-preview">
         <div style={{
           display: mode,
           flexDirection: mode === 'flex' ? flexDirection : undefined,
@@ -95,10 +95,7 @@ const FlexboxGridPlayground = () => {
           width: '100%',
           height: '100%',
           minHeight: '140px',
-          background: 'var(--bg-color)',
-          border: '1px dashed var(--border-color)',
-          borderRadius: '8px',
-          padding: '0.75rem',
+          padding: '1rem',
           overflow: 'auto'
         }}>
           {Array.from({ length: Math.max(1, parseInt(itemCount)) }).map((_, i) => (
@@ -252,7 +249,7 @@ const FlexboxGridPlayground = () => {
   )
 
   return (
-    <div className="card playground-card" data-col="11">
+    <div className="card playground-card" data-h={height} data-col={width}>
       <div className="widget-header">
         <h3 className="widget-title">Flex/Grid Playground</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -301,7 +298,6 @@ const FlexboxGridPlayground = () => {
          .preview-area {
             flex: 1;
             min-height: 140px;
-            margin-bottom: 1rem;
          }
         .playground-item {
            width: 30px;
@@ -329,10 +325,9 @@ const FlexboxGridPlayground = () => {
          }
         .section-title {
            font-size: 0.75rem;
-           font-weight: 600;
-           opacity: 0.8;
-           text-transform: uppercase;
-           letter-spacing: 0.05em;
+           font-weight: 400;
+           opacity: 0.7;
+           margin-bottom: 0.4rem;
         }
         .unit-toggle {
            display: flex;
@@ -379,29 +374,18 @@ const FlexboxGridPlayground = () => {
            gap: 0.75rem;
         }
           .control-row label {
-             font-size: 12px;
+             font-size: 0.75rem;
              font-weight: 400;
              opacity: 0.7;
              white-space: nowrap;
+             margin-bottom: 0.4rem;
           }
          .control-row input[type="number"] {
-            padding: 0.35rem;
-            border-radius: 4px;
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            font-size: 0.75rem;
-            width: 60px;
+            width: 70px;
             text-align: center;
          }
          .control-row select {
-            padding: 0.35rem;
-            border-radius: 4px;
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            font-size: 0.75rem;
-            width: 70px;
+            width: 90px;
             text-align: center;
          }
          .result-area {

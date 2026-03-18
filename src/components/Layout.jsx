@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Moon, Sun, Github } from 'lucide-react'
+import { Moon, Sun, Github, Lock, Unlock } from 'lucide-react'
 import { usePersistentState } from '../hooks/usePersistentState'
 
 const Layout = ({ children }) => {
@@ -9,6 +9,13 @@ const Layout = ({ children }) => {
 
   const theme = themeState.mode
 
+  const [widthState, setWidthState] = usePersistentState('app_width_lock', {
+    isLocked: false,
+    lockedWidth: 1200
+  })
+
+  const { isLocked, lockedWidth } = widthState
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
@@ -17,12 +24,36 @@ const Layout = ({ children }) => {
     setThemeState({ mode: theme === 'light' ? 'dark' : 'light' })
   }
 
+  const toggleWidthLock = () => {
+    const newState = !isLocked
+    if (newState) {
+      setWidthState({
+        isLocked: true,
+        lockedWidth: window.innerWidth
+      })
+    } else {
+      setWidthState({
+        isLocked: false,
+        lockedWidth: lockedWidth
+      })
+    }
+    // Disparar evento para que App.jsx recalcule el grid
+    window.dispatchEvent(new CustomEvent('width-lock-changed'))
+  }
+
   return (
     <div className="min-h-screen">
       <header className="sticky-nav">
         <div className="container header-content">
           <h1 className="logo">Front<span>Tools</span></h1>
           <div className="header-actions">
+            <button 
+              className={`width-lock-toggle ${isLocked ? 'active' : ''}`} 
+              onClick={toggleWidthLock}
+              title={isLocked ? "Desbloquear Ancho" : "Bloquear Ancho"}
+            >
+              {isLocked ? <Lock size={18} /> : <Unlock size={18} />}
+            </button>
             <button className="theme-toggle" onClick={toggleTheme}>
               {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
             </button>
@@ -33,8 +64,17 @@ const Layout = ({ children }) => {
         </div>
       </header>
       
-      <main className="container main-content">
-        {children}
+      <main 
+        className="main-content-wrapper" 
+        style={isLocked ? { 
+          minWidth: `${lockedWidth}px`, 
+          width: `${lockedWidth}px`,
+          margin: '0 auto'
+        } : {}}
+      >
+        <div className="container main-content">
+          {children}
+        </div>
       </main>
 
       <footer className="footer">
@@ -48,6 +88,11 @@ const Layout = ({ children }) => {
           min-height: 100vh;
           display: flex;
           flex-direction: column;
+          overflow-x: auto;
+        }
+        .main-content-wrapper {
+          width: 100%;
+          flex: 1;
         }
         .container {
           padding: 0 1rem;
@@ -81,7 +126,7 @@ const Layout = ({ children }) => {
           gap: 1rem;
           align-items: center;
         }
-        .theme-toggle, .github-link {
+        .theme-toggle, .github-link, .width-lock-toggle {
           background: none;
           color: var(--text-color);
           padding: 0.5rem;
@@ -89,20 +134,25 @@ const Layout = ({ children }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background 0.2s, opacity 0.2s;
+          transition: var(--transition);
+          cursor: pointer;
+          border: none;
+          opacity: 0.7;
         }
-        .theme-toggle:hover, .github-link:hover {
+        .theme-toggle:hover, .github-link:hover, .width-lock-toggle:hover {
           background: var(--hover-color);
-          transform: none;
           opacity: 1;
         }
-        .github-link {
-          opacity: 0.7;
+        .width-lock-toggle.active {
+          color: var(--accent-color);
+          background: rgba(var(--accent-color-rgb), 0.1);
+          opacity: 1;
         }
         .main-content {
           flex: 1;
           padding-top: 1rem;
           padding-bottom: 1rem;
+          margin: 0 auto;
         }
         .footer {
           padding: 2rem 0;

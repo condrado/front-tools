@@ -33,18 +33,18 @@ const WIDGET_COMPONENTS = {
 
 const WIDGET_HEIGHTS = {
   multiples: 7,
-  converter: 5,
+  converter: 4,
   clamp: 5,
   shadow: 9,
   aspect: 6,
   flex: 11,
-  breakpoints: 9
+  breakpoints: 6
 }
 
 const ROWS = 40
 
 function App() {
-  const [widgets, setWidgets] = usePersistentState('dashboard_layout_v11', [
+  const [widgets, setWidgets] = usePersistentState('dashboard_layout_v12', [
     { id: 'multiples', x: 0, y: 0, w: 1 },
     { id: 'converter', x: 1, y: 0, w: 1 },
     { id: 'clamp', x: 2, y: 0, w: 1 },
@@ -57,22 +57,32 @@ function App() {
   const [dynamicCols, setDynamicCols] = useState(0) // 0 significa "no medido aún"
   const gridRef = useRef(null)
 
+  const updateCols = () => {
+    if (gridRef.current) {
+      const width = gridRef.current.offsetWidth
+      const gap = 16 // 1rem
+      const minColWidth = 370 // Coincidir con el valor deseado por el usuario
+      const cols = Math.floor((width + gap) / (minColWidth + gap))
+      const finalCols = Math.max(1, cols)
+      
+      setDynamicCols(finalCols)
+    }
+  }
+
   useEffect(() => {
-    const updateCols = () => {
-      if (gridRef.current) {
-        const width = gridRef.current.offsetWidth
-        const gap = 16 // 1rem
-        const minColWidth = 350 // Un poco más pequeño para dar margen
-        const cols = Math.floor((width + gap) / (minColWidth + gap))
-        const finalCols = Math.max(1, cols)
-        
-        setDynamicCols(finalCols)
-      }
+    const handleWidthLockChange = () => {
+      // Pequeño delay para que el DOM se actualice con los nuevos estilos de Layout
+      setTimeout(updateCols, 50)
     }
 
     updateCols()
     window.addEventListener('resize', updateCols)
-    return () => window.removeEventListener('resize', updateCols)
+    window.addEventListener('width-lock-changed', handleWidthLockChange)
+    
+    return () => {
+      window.removeEventListener('resize', updateCols)
+      window.removeEventListener('width-lock-changed', handleWidthLockChange)
+    }
   }, [])
 
   const resolveBentoLayout = (items, cols) => {
@@ -105,7 +115,7 @@ function App() {
 
     for (const widget of sorted) {
       let { x, y, w } = widget
-      const h = WIDGET_HEIGHTS[widget.id]
+      const h = widget.h || WIDGET_HEIGHTS[widget.id]
       
       // Si está fuera de rango o colisiona, buscamos sitio
       if (x + w > cols || !isAreaFree(x, y, w, h)) {
@@ -136,7 +146,15 @@ function App() {
     }
   }, [dynamicCols])
 
+  const [activeWidth, setActiveWidth] = useState(null)
   const [activeId, setActiveId] = useState(null)
+
+  const updateWidgetSize = (id, newW, newH) => {
+    setWidgets((prev) => {
+      const updated = prev.map(w => w.id === id ? { ...w, w: newW, h: newH } : w)
+      return resolveBentoLayout(updated, dynamicCols)
+    })
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -148,6 +166,10 @@ function App() {
 
   const handleDragStart = (event) => {
     setActiveId(event.active.id)
+    const node = document.getElementById(`widget-${event.active.id}`)
+    if (node) {
+      setActiveWidth(node.offsetWidth)
+    }
   }
 
   const handleDragEnd = (event) => {
@@ -162,6 +184,7 @@ function App() {
     }
 
     setActiveId(null)
+    setActiveWidth(null)
   }
 
   // Generar celdas de fondo basadas en las columnas dinámicas
@@ -194,6 +217,7 @@ function App() {
         <div 
           ref={gridRef}
           className={`dashboard-grid ${activeId ? 'dragging' : ''}`}
+          style={{ '--cols': dynamicCols }}
         >
           {/* Capa de celdas de fondo */}
           {gridCells}
@@ -207,6 +231,7 @@ function App() {
               y={widget.y}
               w={widget.w}
               h={widget.h}
+              onUpdateSize={(newW, newH) => updateWidgetSize(widget.id, newW, newH)}
             >
               {React.createElement(WIDGET_COMPONENTS[widget.id])}
             </DraggableWidget>
@@ -218,8 +243,7 @@ function App() {
             <div 
               style={{ 
                 cursor: 'grabbing',
-                width: '100%',
-                maxWidth: '350px',
+                width: activeWidth ? `${activeWidth}px` : '100%',
                 position: 'relative'
               }}
             >

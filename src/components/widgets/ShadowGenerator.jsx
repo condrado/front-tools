@@ -3,7 +3,7 @@ import { Copy, Check, Maximize2 } from 'lucide-react'
 import Modal from '../Modal'
 import { usePersistentState } from '../../hooks/usePersistentState'
 
-const ShadowGenerator = () => {
+const ShadowGenerator = ({ height, width }) => {
   const [state, setState] = usePersistentState('shadow_gen', {
     hOffset: 0,
     vOffset: 10,
@@ -41,7 +41,7 @@ const ShadowGenerator = () => {
 
   const renderContent = () => (
     <>
-      <div className="preview-container">
+      <div className="preview-container widget-preview">
         <div className="preview-box" style={{ boxShadow: shadowCSS }}>
           Previsualización
         </div>
@@ -102,7 +102,7 @@ const ShadowGenerator = () => {
   )
 
   return (
-    <div className="card shadow-generator" data-col="9">
+    <div className="card shadow-generator" data-h={height} data-col={width}>
       <div className="widget-header">
         <h3 className="widget-title">Generador de Sombras</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -128,13 +128,8 @@ const ShadowGenerator = () => {
           flex-direction: column;
         }
         .preview-container {
-          background: var(--bg-color);
           padding: 1.5rem;
-          display: flex;
           justify-content: center;
-          border-radius: 8px;
-          border: 1px dashed var(--border-color);
-          margin-bottom: 1.25rem;
         }
         .preview-box {
           width: 80px;
@@ -172,18 +167,16 @@ const ShadowGenerator = () => {
         }
         .color-text {
           flex: 1;
-          font-size: 0.8rem !important;
-          padding: 0.5rem !important;
         }
         .control-group {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
         }
         .control-group label {
           font-size: 0.75rem;
           font-weight: 400;
           opacity: 0.7;
+          margin-bottom: 0.4rem;
         }
         .code-header {
           display: flex;

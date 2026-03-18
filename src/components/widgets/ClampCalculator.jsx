@@ -3,7 +3,7 @@ import { Copy, Check, Calculator, Maximize2 } from 'lucide-react'
 import Modal from '../Modal'
 import { usePersistentState } from '../../hooks/usePersistentState'
 
-const ClampCalculator = () => {
+const ClampCalculator = ({ height, width }) => {
   const [state, setState] = usePersistentState('clamp_calc', {
     minSize: '16',
     maxSize: '48',
@@ -96,7 +96,7 @@ const ClampCalculator = () => {
   )
 
   return (
-    <div className="card clamp-card" data-col="6">
+    <div className="card clamp-card" data-h={height} data-col={width}>
       <div className="widget-header">
         <h3 className="widget-title">Calculadora Clamp()</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -130,14 +130,12 @@ const ClampCalculator = () => {
         .input-field {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
         }
         .input-field label {
           font-size: 0.75rem;
-          font-weight: 500;
-          opacity: 0.6;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+          font-weight: 400;
+          opacity: 0.7;
+          margin-bottom: 0.4rem;
         }
         .result-area {
           margin-top: 1rem;

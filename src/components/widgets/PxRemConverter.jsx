@@ -3,7 +3,7 @@ import { ArrowRightLeft, Maximize2, Copy, Check } from 'lucide-react'
 import Modal from '../Modal'
 import { usePersistentState } from '../../hooks/usePersistentState'
 
-const PxRemConverter = () => {
+const PxRemConverter = ({ height, width }) => {
   const [state, setState] = usePersistentState('px_rem_conv', {
     px: '16',
     rem: '1',
@@ -122,7 +122,7 @@ const PxRemConverter = () => {
   )
 
   return (
-    <div className="card converter-card" data-col="5">
+    <div className="card converter-card" data-h={height} data-col={width}>
       <div className="widget-header">
         <h3 className="widget-title">Conversor Px/REM</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -150,13 +150,12 @@ const PxRemConverter = () => {
           display: flex;
           align-items: flex-end;
           gap: 1rem;
-          padding-bottom: 1.5rem;
+          padding-bottom: 1.25rem;
         }
         .input-group {
           flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
         }
         .input-with-action {
           position: relative;
@@ -189,23 +188,24 @@ const PxRemConverter = () => {
           opacity: 1;
         }
         .input-group label {
-          font-size: 0.875rem;
+          font-size: 0.75rem;
           font-weight: 400;
-          opacity: 0.8;
+          opacity: 0.7;
+          margin-bottom: 0.4rem;
         }
         .icon-wrapper {
           padding-bottom: 0.75rem;
           color: var(--accent-color);
         }
         .reference-section {
-          padding-top: 1.5rem;
-          border-top: 1px solid var(--border-color);
+          padding-top: 0;
         }
         .reference-section label {
-          font-size: 0.875rem;
+          font-size: 0.75rem;
           font-weight: 400;
-          margin-bottom: 0.75rem;
+          opacity: 0.7;
           display: block;
+          margin-bottom: 0.4rem;
         }
         .base-input-wrapper {
           position: relative;

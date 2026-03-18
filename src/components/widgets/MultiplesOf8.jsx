@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Check, Copy, Maximize2 } from 'lucide-react'
 import Modal from '../Modal'
 
-const MultiplesOf8 = () => {
+const MultiplesOf8 = ({ height, width }) => {
   const [copied, setCopied] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const baseSize = 16
@@ -34,7 +34,7 @@ const MultiplesOf8 = () => {
   )
 
   return (
-    <div className="card widget-card" data-col="7">
+    <div className="card widget-card" data-h={height} data-col={width}>
       <div className="widget-header">
         <h3 className="widget-title">Múltiplos de 8</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
