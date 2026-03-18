@@ -93,17 +93,16 @@ const ShadowGenerator = () => {
         </div>
         <div className="result-box">
           <code>{codeContent}</code>
+          <button className="icon-copy-btn" onClick={copyToClipboard} title="Copiar código">
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+          </button>
         </div>
-        <button className="copy-btn" onClick={copyToClipboard}>
-          {copied ? <Check size={18} /> : <Copy size={18} />}
-          <span>{copied ? 'Copiado' : 'Copiar Código'}</span>
-        </button>
       </div>
     </>
   )
 
   return (
-    <div className="card shadow-generator" data-col="10">
+    <div className="card shadow-generator" data-col="9">
       <div className="widget-header">
         <h3 className="widget-title">Generador de Sombras</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>

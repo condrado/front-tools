@@ -90,7 +90,7 @@ const AspectRatioCalculator = () => {
 
       <div className="target-input-group">
         <div className="section-label">Cálculo Objetivo</div>
-        <div className="inputs-row">
+        <div className="inputs-row" style={{ marginBottom: 0 }}>
           <div className="input-field">
             <label>Ancho (px)</label>
             <input type="number" value={w2} onChange={handleW2Change} />
@@ -102,18 +102,18 @@ const AspectRatioCalculator = () => {
             <label>Alto (px)</label>
             <input type="number" value={h2} onChange={handleH2Change} />
           </div>
+          <div className="input-icon-wrapper">
+            <button className="icon-copy-btn" onClick={copyResult} title="Copiar Dimensiones" style={{ height: '100%', width: '100%' }}>
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+            </button>
+          </div>
         </div>
       </div>
-
-      <button className="copy-btn" onClick={copyResult}>
-        {copied ? <Check size={16} /> : <Copy size={16} />}
-        <span>{copied ? 'Copiado' : 'Copiar Dimensiones'}</span>
-      </button>
     </>
   )
 
   return (
-    <div className="card aspect-ratio-card" data-col="7">
+    <div className="card aspect-ratio-card" data-col="6">
       <div className="widget-header">
         <h3 className="widget-title">Calculadora de Ratio</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -143,7 +143,7 @@ const AspectRatioCalculator = () => {
         }
         .inputs-row {
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           gap: 0.75rem;
           margin-bottom: 1rem;
         }
@@ -208,16 +208,16 @@ const AspectRatioCalculator = () => {
         }
         .icon-link {
           opacity: 0.3;
-          padding-top: 1.25rem;
-        }
-        .copy-btn {
-          margin-top: auto;
-          font-size: 0.85rem;
+          height: 35px; /* Altura exacta aproximada del input */
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.5rem;
-          padding: 0.6rem !important;
+        }
+        .input-icon-wrapper {
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       `}</style>
     </div>

@@ -34,10 +34,10 @@ const WIDGET_COMPONENTS = {
 const WIDGET_HEIGHTS = {
   multiples: 7,
   converter: 5,
-  clamp: 6,
-  shadow: 10,
-  aspect: 7,
-  flex: 12,
+  clamp: 5,
+  shadow: 9,
+  aspect: 6,
+  flex: 11,
   breakpoints: 9
 }
 

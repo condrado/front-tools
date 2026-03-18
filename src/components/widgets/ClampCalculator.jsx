@@ -87,11 +87,10 @@ const ClampCalculator = () => {
         </div>
         <div className="result-box">
           <code>{codeContent}</code>
+          <button className="icon-copy-btn" onClick={copyToClipboard} title="Copiar código">
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+          </button>
         </div>
-        <button className="copy-btn" onClick={copyToClipboard}>
-          {copied ? <Check size={18} /> : <Copy size={18} />}
-          <span>{copied ? 'Copiado' : 'Copiar Código'}</span>
-        </button>
       </div>
     </>
   )
@@ -154,11 +153,14 @@ const ClampCalculator = () => {
           min-height: 3rem;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           word-break: break-all;
           font-size: 0.875rem;
+          gap: 0.5rem;
         }
         .result-box code {
           color: var(--accent-color);
+          flex: 1;
         }
         .code-header {
           display: flex;
@@ -189,13 +191,6 @@ const ClampCalculator = () => {
           background: var(--card-bg);
           opacity: 1;
           box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        .copy-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          margin-top: 0.25rem;
         }
       `}</style>
     </div>

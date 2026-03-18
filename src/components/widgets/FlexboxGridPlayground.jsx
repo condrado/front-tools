@@ -243,17 +243,16 @@ const FlexboxGridPlayground = () => {
         </div>
         <div className="result-box">
           <code>{generateCSS()}</code>
+          <button className="icon-copy-btn" onClick={copyCSS} title="Copiar código">
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+          </button>
         </div>
-        <button className="copy-btn" onClick={copyCSS}>
-          {copied ? <Check size={18} /> : <Copy size={18} />}
-          <span>{copied ? 'Copiado' : 'Copiar Código'}</span>
-        </button>
       </div>
     </>
   )
 
   return (
-    <div className="card playground-card" data-col="12">
+    <div className="card playground-card" data-col="11">
       <div className="widget-header">
         <h3 className="widget-title">Flex/Grid Playground</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
@@ -419,6 +418,8 @@ const FlexboxGridPlayground = () => {
             min-height: 4rem;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
             word-break: break-all;
             font-size: 0.75rem;
             color: var(--accent-color);
@@ -426,6 +427,7 @@ const FlexboxGridPlayground = () => {
          .result-box code {
             color: var(--accent-color);
             white-space: pre-wrap;
+            flex: 1;
          }
          .code-header {
             display: flex;
@@ -457,13 +459,6 @@ const FlexboxGridPlayground = () => {
             background: var(--card-bg);
             opacity: 1;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-         }
-         .copy-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.25rem;
          }
       `}</style>
     </div>
