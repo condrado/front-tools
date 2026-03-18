@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build && rm -rf docs && cp -R dist docs",
     "build:watch": "vite build --watch",
+    "watch": "concurrently -n 'DEV,BUILD' -c 'cyan.bold,yellow.bold' \"npm run dev\" \"npm run build:watch\"",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -23,6 +24,7 @@
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-legacy": "^5.4.3",
     "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^9.2.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
