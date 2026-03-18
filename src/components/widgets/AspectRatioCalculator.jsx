@@ -188,11 +188,6 @@ const AspectRatioCalculator = ({ height, width }) => {
           font-weight: 700;
           font-size: 0.8rem;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          
-          /* Lógica de dimensionado proporcial: 
-             Si el ratio es muy ancho (frente al contenedor), ocupamos el 100% del ancho.
-             De lo contrario, ocupamos el 100% del alto disponible.
-          */
           aspect-ratio: ${w1 || 1} / ${h1 || 1};
           width: ${(w1 || 1) / (h1 || 1) > 2.5 ? '100%' : 'auto'};
           height: ${(w1 || 1) / (h1 || 1) > 2.5 ? 'auto' : '100%'};
@@ -201,13 +196,14 @@ const AspectRatioCalculator = ({ height, width }) => {
         }
         .icon-link {
           opacity: 0.3;
-          height: 35px; /* Altura exacta aproximada del input */
+          height: 35px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
         .input-icon-wrapper {
           height: 35px;
+          width: 35px;
           display: flex;
           align-items: center;
           justify-content: center;

@@ -181,7 +181,6 @@ const PxRemConverter = ({ height, width }) => {
         .copy-input-btn:hover {
           opacity: 1;
           background: var(--hover-color);
-          transform: none;
         }
         .copy-input-btn.copied {
           color: var(--accent-color);

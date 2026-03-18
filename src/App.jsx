@@ -148,6 +148,8 @@ function App() {
 
   const [activeWidth, setActiveWidth] = useState(null)
   const [activeId, setActiveId] = useState(null)
+  const [activeH, setActiveH] = useState(1)
+  const [activeW, setActiveW] = useState(1)
 
   const updateWidgetSize = (id, newW, newH) => {
     setWidgets((prev) => {
@@ -165,8 +167,14 @@ function App() {
   )
 
   const handleDragStart = (event) => {
-    setActiveId(event.active.id)
-    const node = document.getElementById(`widget-${event.active.id}`)
+    const id = event.active.id
+    setActiveId(id)
+    const widget = widgets.find(w => w.id === id)
+    if (widget) {
+      setActiveH(widget.h)
+      setActiveW(widget.w)
+    }
+    const node = document.getElementById(`widget-${id}`)
     if (node) {
       setActiveWidth(node.offsetWidth)
     }
@@ -258,7 +266,7 @@ function App() {
               >
                 <Grip size={14} />
               </div>
-              {React.createElement(WIDGET_COMPONENTS[activeId])}
+              {React.createElement(WIDGET_COMPONENTS[activeId], { height: activeH, width: activeW })}
             </div>
           ) : null}
         </DragOverlay>

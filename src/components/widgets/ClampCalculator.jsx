@@ -137,59 +137,6 @@ const ClampCalculator = ({ height, width }) => {
           opacity: 0.7;
           margin-bottom: 0.4rem;
         }
-        .result-area {
-          margin-top: 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        .result-box {
-          background: var(--bg-color);
-          padding: 1rem;
-          border-radius: 8px;
-          border: 1px solid var(--border-color);
-          min-height: 3rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          word-break: break-all;
-          font-size: 0.875rem;
-          gap: 0.5rem;
-        }
-        .result-box code {
-          color: var(--accent-color);
-          flex: 1;
-        }
-        .code-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 0.5rem;
-        }
-        .code-label {
-          font-size: 0.75rem;
-          font-weight: 500;
-          opacity: 0.5;
-        }
-        .format-toggle {
-          display: flex;
-          background: var(--hover-color);
-          padding: 2px;
-          border-radius: 6px;
-        }
-        .format-toggle button {
-          padding: 0.25rem 0.6rem;
-          font-size: 0.7rem;
-          background: none;
-          color: var(--text-color);
-          opacity: 0.6;
-          border-radius: 4px;
-        }
-        .format-toggle button.active {
-          background: var(--card-bg);
-          opacity: 1;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
       `}</style>
     </div>
   )

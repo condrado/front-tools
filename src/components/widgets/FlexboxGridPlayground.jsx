@@ -263,9 +263,7 @@ const FlexboxGridPlayground = ({ height, width }) => {
          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
             {renderContent()}
          </div>
-      </Modal>
-
-      <style jsx="true">{`
+      </Modal>      <style jsx="true">{`
         .playground-card {
            display: flex;
            flex-direction: column;
@@ -298,6 +296,9 @@ const FlexboxGridPlayground = ({ height, width }) => {
          .preview-area {
             flex: 1;
             min-height: 140px;
+            max-width: 100%;
+            overflow-x: auto;
+            border-radius: 8px;
          }
         .playground-item {
            width: 30px;
@@ -310,44 +311,6 @@ const FlexboxGridPlayground = ({ height, width }) => {
            justify-content: center;
            font-weight: 600;
            font-size: 0.8rem;
-        }
-        .controls-header {
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           margin-bottom: 0.5rem;
-           padding: 0 0.25rem;
-        }
-         .input-field label {
-           font-size: 0.75rem;
-           font-weight: 400;
-           opacity: 0.7;
-         }
-        .section-title {
-           font-size: 0.75rem;
-           font-weight: 400;
-           opacity: 0.7;
-           margin-bottom: 0.4rem;
-        }
-        .unit-toggle {
-           display: flex;
-           background: var(--hover-color);
-           padding: 2px;
-           border-radius: 6px;
-        }
-        .unit-toggle button {
-           padding: 0.2rem 0.5rem;
-           font-size: 0.65rem;
-           background: none;
-           color: var(--text-color);
-           opacity: 0.6;
-           border-radius: 4px;
-           font-weight: 600;
-        }
-        .unit-toggle button.active {
-           background: var(--card-bg);
-           opacity: 1;
-           box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .playground-controls {
            display: flex;
@@ -387,62 +350,6 @@ const FlexboxGridPlayground = ({ height, width }) => {
          .control-row select {
             width: 90px;
             text-align: center;
-         }
-         .result-area {
-            margin-top: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-         }
-         .result-box {
-            background: var(--bg-color);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            word-break: break-all;
-            font-size: 0.75rem;
-            color: var(--accent-color);
-         }
-         .result-box code {
-            color: var(--accent-color);
-            white-space: pre-wrap;
-            flex: 1;
-         }
-         .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-         }
-         .code-label {
-            font-size: 0.75rem;
-            font-weight: 500;
-            opacity: 0.5;
-         }
-         .format-toggle {
-            display: flex;
-            background: var(--hover-color);
-            padding: 2px;
-            border-radius: 6px;
-         }
-         .format-toggle button {
-            padding: 0.25rem 0.6rem;
-            font-size: 0.7rem;
-            background: none;
-            color: var(--text-color);
-            opacity: 0.6;
-            border-width: 0;
-            border-radius: 4px;
-         }
-         .format-toggle button.active {
-            background: var(--card-bg);
-            opacity: 1;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
          }
       `}</style>
     </div>
