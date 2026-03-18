@@ -16,9 +16,9 @@ const GridCell = ({ id, x, y }) => {
   }
 
   return (
-    <div 
-      ref={setNodeRef} 
-      style={style} 
+    <div
+      ref={setNodeRef}
+      style={style}
       className={`grid-cell ${isOver ? 'over' : ''}`}
     />
   )
