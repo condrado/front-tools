@@ -41,6 +41,16 @@ const WIDGET_HEIGHTS = {
   breakpoints: 6
 }
 
+const WIDGET_CATALOG = [
+  { id: 'multiples', name: 'Múltiplos de 8' },
+  { id: 'converter', name: 'Conversor Px/REM' },
+  { id: 'clamp', name: 'Calculadora Clamp' },
+  { id: 'aspect', name: 'Ratio de Aspecto' },
+  { id: 'breakpoints', name: 'Info Breakpoints' },
+  { id: 'shadow', name: 'Generador de Sombras' },
+  { id: 'flex', name: 'Playground Flex/Grid' },
+]
+
 const ROWS = 40
 
 function App() {
@@ -160,6 +170,20 @@ function App() {
     })
   }
 
+  const handleToggleWidget = (id) => {
+    setWidgets((prev) => {
+      const exists = prev.find(w => w.id === id)
+      if (exists) {
+        // Desactivar: Filtramos para eliminarlo (pierde sesión)
+        return prev.filter(w => w.id !== id)
+      } else {
+        // Activar: Lo añadimos y el layout resolver lo colocará en el primer hueco
+        const newWidget = { id, x: 0, y: 0, w: 1 }
+        return resolveBentoLayout([...prev, newWidget], dynamicCols)
+      }
+    })
+  }
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -216,7 +240,11 @@ function App() {
   }
 
   return (
-    <Layout>
+    <Layout 
+      widgetsCatalog={WIDGET_CATALOG} 
+      activeWidgets={widgets.map(w => w.id)}
+      onToggleWidget={handleToggleWidget}
+    >
       <DndContext
         sensors={sensors}
         collisionDetection={pointerWithin}

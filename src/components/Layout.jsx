@@ -1,22 +1,13 @@
-import React, { useEffect } from 'react'
-import { Moon, Sun, Github, Lock, Unlock, Type } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Type, Moon, Sun, Github, Settings, ChevronRight, Lock, Unlock } from 'lucide-react'
 import { usePersistentState } from '../hooks/usePersistentState'
 
-const Layout = ({ children }) => {
-  const [themeState, setThemeState] = usePersistentState('app_theme', {
-    mode: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
-
-  const theme = themeState.mode
-
-  const [widthState, setWidthState] = usePersistentState('app_width_lock', {
-    isLocked: false,
-    lockedWidth: 1200
-  })
-
-  const [fontSize, setFontSize] = usePersistentState('root_font_size', 16)
-
-  const { isLocked, lockedWidth } = widthState
+const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWidget }) => {
+  const [fontSize, setFontSize] = usePersistentState('page_font_size_v1', 16)
+  const [theme, setTheme] = usePersistentState('page_theme_v1', 'dark')
+  const [isWidthLocked, setIsWidthLocked] = usePersistentState('page_width_lock_v1', false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const settingsRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -24,85 +15,127 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     document.documentElement.style.fontSize = `${fontSize}px`
-    // Disparar evento para que App.jsx recalcule el grid cuando cambie la fuente
+    // Notificar al grid que el tamaño de fuente cambió (recalc layout)
     window.dispatchEvent(new CustomEvent('width-lock-changed'))
   }, [fontSize])
 
-  const toggleTheme = () => {
-    setThemeState({ mode: theme === 'light' ? 'dark' : 'light' })
-  }
-
-  const toggleWidthLock = () => {
-    const newState = !isLocked
-    if (newState) {
-      setWidthState({
-        isLocked: true,
-        lockedWidth: window.innerWidth
-      })
-    } else {
-      setWidthState({
-        isLocked: false,
-        lockedWidth: lockedWidth
-      })
-    }
-    // Disparar evento para que App.jsx recalcule el grid
+  useEffect(() => {
+    document.body.className = isWidthLocked ? 'width-locked' : ''
     window.dispatchEvent(new CustomEvent('width-lock-changed'))
+  }, [isWidthLocked])
+
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target)) {
+        setIsSettingsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   return (
     <div className="min-h-screen">
-      <header className="sticky-nav">
-        <div className="container header-content">
-          <h1 className="logo">Front<span>Tools</span></h1>
-          <div className="header-actions">
+      <nav className="sticky-nav">
+        <div className="nav-container">
+          <div className="nav-left">
+            <h1 className="logo">Front<span>Tools</span></h1>
+          </div>
+          
+          <div className="nav-right">
             <button 
-              className={`width-lock-toggle ${isLocked ? 'active' : ''}`} 
-              onClick={toggleWidthLock}
-              title={isLocked ? "Desbloquear Ancho" : "Bloquear Ancho"}
+              className={`nav-icon-btn ${isWidthLocked ? 'active' : ''}`} 
+              onClick={() => setIsWidthLocked(!isWidthLocked)}
+              title={isWidthLocked ? "Desbloquear ancho" : "Bloquear ancho"}
             >
-              {isLocked ? <Lock size={18} className="size-18" /> : <Unlock size={18} className="size-18" />}
+              {isWidthLocked ? <Lock size={20} className="size-20" /> : <Unlock size={20} className="size-20" />}
             </button>
-            <div className="font-size-control">
-              <Type size={18} className="font-icon size-18" />
-              <select 
-                value={fontSize} 
-                onChange={(e) => setFontSize(Number(e.target.value))}
-                className="font-select"
-                title="Cambiar tamaño de fuente"
+            
+            <div className="settings-wrapper" ref={settingsRef}>
+              <button 
+                className={`nav-icon-btn ${isSettingsOpen ? 'active' : ''}`} 
+                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                title="Ajustes"
               >
-                {[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map(size => (
-                  <option key={size} value={size}>{size}px</option>
-                ))}
-              </select>
+                <Settings size={20} className="size-20" />
+              </button>
+
+              {isSettingsOpen && (
+                <div className="settings-dropdown">
+                  <div className="dropdown-section">
+                    <h4 className="dropdown-title">Ajustes de Interfaz</h4>
+                    
+                    <div className="setting-item">
+                      <div className="setting-row">
+                        <div className="setting-label">
+                          {theme === 'dark' ? <Moon size={14} className="size-14" /> : <Sun size={14} className="size-14" />}
+                          <span className="label-text">Modo Oscuro</span>
+                        </div>
+                        <label className="switch">
+                          <input 
+                            type="checkbox" 
+                            checked={theme === 'dark'}
+                            onChange={toggleTheme}
+                          />
+                          <span className="slider"></span>
+                        </label>
+                      </div>
+
+                      <div className="setting-col" style={{ marginTop: '0.8rem' }}>
+                        <div className="setting-label">
+                          <Type size={14} className="size-14" />
+                          <span className="label-text">Tamaño fuente</span>
+                        </div>
+                        <div className="font-size-controls">
+                          <button onClick={() => setFontSize(Math.max(12, fontSize - 1))}>-</button>
+                          <span className="current-size">{fontSize}px</span>
+                          <button onClick={() => setFontSize(Math.min(24, fontSize + 1))}>+</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="dropdown-divider"></div>
+
+                  <div className="dropdown-section">
+                    <h4 className="dropdown-title">Visibilidad de Widgets</h4>
+                    <div className="widgets-selector-list">
+                      {widgetsCatalog.map(widget => (
+                        <div key={widget.id} className="widget-toggle-item">
+                          <span className="label-text" style={{ fontSize: '0.875rem', opacity: 1, fontWeight: 500 }}>{widget.name}</span>
+                          <label className="switch">
+                            <input 
+                              type="checkbox" 
+                              checked={activeWidgets.includes(widget.id)}
+                              onChange={() => onToggleWidget(widget.id)}
+                            />
+                            <span className="slider"></span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <button className="theme-toggle" onClick={toggleTheme}>
-              {theme === 'light' ? <Moon size={20} className="size-20" /> : <Sun size={20} className="size-20" />}
-            </button>
-            <a href="https://github.com/condrado/front-tools" target="_blank" rel="noopener noreferrer" className="github-link">
+
+            <a href="https://github.com/conradopm/front-tools" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="GitHub">
               <Github size={20} className="size-20" />
             </a>
           </div>
         </div>
-      </header>
-      
-      <main 
-        className="main-content-wrapper" 
-        style={isLocked ? { 
-          minWidth: `${lockedWidth / 16}rem`, 
-          width: `${lockedWidth / 16}rem`,
-          margin: '0 auto'
-        } : {}}
-      >
-        <div className="container main-content">
+      </nav>
+
+      <main className="main-content-wrapper">
+        <div className="page-container">
           {children}
         </div>
       </main>
-
-      <footer className="footer">
-        <div className="container">
-          <p>© {new Date().getFullYear()} FrontTools - Hecho para desarrolladores</p>
-        </div>
-      </footer>
 
       <style jsx="true">{`
         .min-h-screen {
@@ -110,106 +143,235 @@ const Layout = ({ children }) => {
           display: flex;
           flex-direction: column;
         }
-        .main-content-wrapper {
-          width: 100%;
-          flex: 1;
-        }
-        .container {
-          padding: 0 1rem;
-          width: 100%;
-        }
         .sticky-nav {
           position: sticky;
           top: 0;
-          z-index: 100;
+          z-index: 1000;
           background: rgba(var(--bg-rgb, 255, 255, 255), 0.8);
           backdrop-filter: blur(12px);
           border-bottom: 1px solid var(--border-color);
-          padding: 1rem 0;
+          padding: 0.75rem 0;
         }
-        .header-content {
+        .nav-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 1.5rem;
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
         }
         .logo {
           font-size: 1.5rem;
           font-weight: 300;
           letter-spacing: -0.02em;
+          margin: 0;
+          color: var(--text-color);
         }
         .logo span {
           color: var(--accent-color);
           font-weight: 600;
         }
-        .header-actions {
+        .nav-right {
           display: flex;
-          gap: 1rem;
           align-items: center;
+          gap: 0.75rem;
         }
-        .theme-toggle, .github-link, .width-lock-toggle {
+        .nav-icon-btn {
           background: none;
+          border: none;
           color: var(--text-color);
           padding: 0.5rem;
-          border-radius: 50%;
+          cursor: pointer;
+          border-radius: 0.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
           transition: var(--transition);
-          cursor: pointer;
-          border: none;
           opacity: 0.7;
         }
-        .theme-toggle:hover, .github-link:hover, .width-lock-toggle:hover {
+        .nav-icon-btn:hover, .nav-icon-btn.active {
           background: var(--hover-color);
           opacity: 1;
         }
-        .width-lock-toggle.active {
-          color: var(--accent-color);
-          background: rgba(var(--accent-color-rgb), 0.1);
-          opacity: 1;
+        
+        /* Dropdown Styles */
+        .settings-wrapper {
+          position: relative;
         }
-        .font-size-control {
+        .settings-dropdown {
+          position: absolute;
+          top: calc(100% + 0.75rem);
+          right: 0;
+          width: 250px;
+          background: var(--card-bg);
+          border: 1px solid var(--border-color);
+          border-radius: 1rem;
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+          padding: 1.25rem;
+          animation: slideUp 0.15s ease-out;
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .dropdown-title {
+          font-size: 0.65rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          opacity: 0.4;
+          margin: 0 0 1rem 0;
+          letter-spacing: 0.05em;
+        }
+        .dropdown-divider {
+          height: 1px;
+          background: var(--border-color);
+          margin: 1.25rem -1.25rem;
+        }
+        
+        .setting-item {
+          display: flex;
+          flex-direction: column;
+        }
+        .setting-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.1rem 0;
+        }
+        .setting-col {
+          display: flex;
+          flex-direction: column;
+        }
+        .setting-label {
           display: flex;
           align-items: center;
           gap: 0.5rem;
+          margin-bottom: 0.4rem;
+        }
+        .label-text {
+          font-size: 0.75rem;
+          font-weight: 400;
+          opacity: 0.7;
+          white-space: nowrap;
+        }
+        
+        .font-size-controls {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
           background: var(--hover-color);
-          padding: 0.25rem 0.5rem;
-          border-radius: 8px;
-          opacity: 0.8;
-          transition: var(--transition);
+          padding: 0.3rem;
+          border-radius: 0.5rem;
         }
-        .font-size-control:hover {
-          opacity: 1;
-        }
-        .font-icon {
+        .font-size-controls button {
+          background: var(--card-bg);
+          border: 1px solid var(--border-color);
           color: var(--text-color);
-          opacity: 0.6;
-        }
-        .font-select {
-          background: none;
-          border: none;
-          padding: 0.125rem;
-          font-size: 0.875rem;
-          color: var(--text-color);
+          width: 1.7rem;
+          height: 1.7rem;
+          border-radius: 0.35rem;
           cursor: pointer;
-          width: 4rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
         }
-        .font-select:focus {
-          outline: none;
-          box-shadow: none;
+        .font-size-controls button:hover {
+          background: var(--accent-color);
+          color: white;
+          border-color: var(--accent-color);
+          transform: translateY(-1px);
         }
-        .main-content {
-          flex: 1;
-          padding-top: 1rem;
-          padding-bottom: 1rem;
-          margin: 0 auto;
-        }
-        .footer {
-          padding: 2rem 0;
-          border-top: 1px solid var(--border-color);
+        .current-size {
+          font-size: 0.85rem;
+          font-weight: 600;
+          min-width: 3rem;
           text-align: center;
-          font-size: 0.875rem;
-          opacity: 0.6;
+        }
+        
+        /* Widgets List */
+        .widgets-selector-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+          max-height: 200px;
+          overflow-y: auto;
+          padding-right: 0.5rem;
+          margin-right: -0.5rem;
+        }
+        
+        /* Custom Scrollbar for Widgets List */
+        .widgets-selector-list::-webkit-scrollbar {
+          width: 4px;
+        }
+        .widgets-selector-list::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .widgets-selector-list::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: 10px;
+        }
+        .widgets-selector-list::-webkit-scrollbar-thumb:hover {
+          background: var(--accent-color);
+        }
+        
+        .widget-toggle-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.15rem 0;
+        }
+        
+        /* Switch Styles */
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 2.2rem;
+          height: 1.2rem;
+        }
+        .switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: var(--border-color);
+          transition: .3s;
+          border-radius: 1.25rem;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 0.85rem;
+          width: 0.85rem;
+          left: 0.175rem;
+          bottom: 0.175rem;
+          background-color: white;
+          transition: .3s;
+          border-radius: 50%;
+        }
+        input:checked + .slider {
+          background-color: var(--accent-color);
+        }
+        input:checked + .slider:before {
+          transform: translateX(1rem);
+        }
+
+        .main-content-wrapper {
+          flex: 1;
+          background: var(--bg-color);
+        }
+        .page-container {
+          max-width: 1400px;
+          margin: 0 auto;
         }
       `}</style>
     </div>
