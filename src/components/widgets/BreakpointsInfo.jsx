@@ -13,12 +13,12 @@ const BreakpointsInfo = ({ height, width }) => {
    }, [])
 
    const breakpoints = [
-      { name: 'xs', range: '0 - 480', device: <Smartphone size={14} />, desc: 'Móviles antiguos' },
-      { name: 'sm', range: '481 - 768', device: <Smartphone size={14} />, desc: 'Móviles modernos' },
-      { name: 'md', range: '769 - 1024', device: <Tablet size={14} />, desc: 'Tablets' },
-      { name: 'lg', range: '1025 - 1280', device: <Monitor size={14} />, desc: 'Portátiles' },
-      { name: 'xl', range: '1281 - 1536', device: <Monitor size={14} />, desc: 'Desktops' },
-      { name: '2xl', range: '1537+', device: <HelpCircle size={14} />, desc: 'Monitores 4K' },
+      { name: 'xs', range: '0 - 480', device: <Smartphone size={14} className="size-14" />, desc: 'Móviles antiguos' },
+      { name: 'sm', range: '481 - 768', device: <Smartphone size={14} className="size-14" />, desc: 'Móviles modernos' },
+      { name: 'md', range: '769 - 1024', device: <Tablet size={14} className="size-14" />, desc: 'Tablets' },
+      { name: 'lg', range: '1025 - 1280', device: <Monitor size={14} className="size-14" />, desc: 'Portátiles' },
+      { name: 'xl', range: '1281 - 1536', device: <Monitor size={14} className="size-14" />, desc: 'Desktops' },
+      { name: '2xl', range: '1537+', device: <HelpCircle size={14} className="size-14" />, desc: 'Monitores 4K' },
    ]
 
    const getCurrentBreakpoint = () => {
@@ -60,7 +60,7 @@ const BreakpointsInfo = ({ height, width }) => {
          </div>
 
          <div className="custom-info">
-            <Info size={14} />
+            <Info size={14} className="size-14" />
             <p>Valores basados en estándares comunes como TailwindCSS y Bootstrap.</p>
          </div>
       </div>
@@ -71,7 +71,7 @@ const BreakpointsInfo = ({ height, width }) => {
          <div className="widget-header">
             <h3 className="widget-title">Breakpoints Guide</h3>
             <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-               <Maximize2 size={16} />
+               <Maximize2 size={16} className="size-16" />
             </button>
          </div>
 
@@ -94,7 +94,7 @@ const BreakpointsInfo = ({ height, width }) => {
            gap: 0.5rem;
            background: var(--hover-color);
            padding: 0.75rem;
-           border-radius: 8px;
+           border-radius: 0.5rem; /* 8px */
            margin-bottom: 0.5rem;
         }
         .stat {
@@ -123,7 +123,7 @@ const BreakpointsInfo = ({ height, width }) => {
            align-items: center;
            gap: 0.75rem;
            padding: 0.5rem 0.75rem;
-           border-radius: 6px;
+           border-radius: 0.375rem; /* 6px */
            border: 1px solid transparent;
            opacity: 0.5;
            transition: var(--transition);
@@ -137,7 +137,7 @@ const BreakpointsInfo = ({ height, width }) => {
         .bp-name {
            font-size: 0.75rem;
            font-weight: 700;
-           width: 30px;
+           width: 1.875rem; /* 30px */
         }
         .bp-desc {
            display: flex;

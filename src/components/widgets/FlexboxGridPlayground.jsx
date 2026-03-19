@@ -71,13 +71,13 @@ const FlexboxGridPlayground = ({ height, width }) => {
           className={mode === 'flex' ? 'active' : ''} 
           onClick={() => updateState('mode', 'flex')}
         >
-          <Rows size={16} /> Flex
+          <Rows size={16} className="size-16" /> Flex
         </button>
         <button 
           className={mode === 'grid' ? 'active' : ''} 
           onClick={() => updateState('mode', 'grid')}
         >
-          <LayoutGrid size={16} /> Grid
+          <LayoutGrid size={16} className="size-16" /> Grid
         </button>
       </div>
 
@@ -94,7 +94,7 @@ const FlexboxGridPlayground = ({ height, width }) => {
           gap: `${gap}${unit}`,
           width: '100%',
           height: '100%',
-          minHeight: '140px',
+          minHeight: '8.75rem', /* 140px */
           padding: '1rem',
           overflow: 'auto'
         }}>
@@ -105,8 +105,8 @@ const FlexboxGridPlayground = ({ height, width }) => {
               style={{
                 width: parseFloat(itemWidth) > 0 ? `${itemWidth}${unit}` : 'auto',
                 height: parseFloat(itemHeight) > 0 ? `${itemHeight}${unit}` : 'auto',
-                minWidth: parseFloat(itemWidth) === 0 ? '60px' : undefined,
-                minHeight: parseFloat(itemHeight) === 0 ? '30px' : undefined,
+                minWidth: parseFloat(itemWidth) === 0 ? '3.75rem' : undefined, /* 60px */
+                minHeight: parseFloat(itemHeight) === 0 ? '1.875rem' : undefined, /* 30px */
                 flexShrink: 0,
               }}
             >
@@ -241,7 +241,7 @@ const FlexboxGridPlayground = ({ height, width }) => {
         <div className="result-box">
           <code>{generateCSS()}</code>
           <button className="icon-copy-btn" onClick={copyCSS} title="Copiar código">
-            {copied ? <Check size={16} /> : <Copy size={16} />}
+            {copied ? <Check size={16} className="size-16" /> : <Copy size={16} className="size-16" />}
           </button>
         </div>
       </div>
@@ -253,7 +253,7 @@ const FlexboxGridPlayground = ({ height, width }) => {
       <div className="widget-header">
         <h3 className="widget-title">Flex/Grid Playground</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-          <Maximize2 size={16} />
+          <Maximize2 size={16} className="size-16" />
         </button>
       </div>
 
@@ -271,10 +271,10 @@ const FlexboxGridPlayground = ({ height, width }) => {
          .mode-toggle {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4px;
+            gap: 0.25rem; /* 4px */
             background: var(--hover-color);
-            padding: 4px;
-            border-radius: 8px;
+            padding: 0.25rem; /* 4px */
+            border-radius: 0.5rem; /* 8px */
             margin-bottom: 1rem;
          }
         .mode-toggle button {
@@ -295,17 +295,17 @@ const FlexboxGridPlayground = ({ height, width }) => {
         }
          .preview-area {
             flex: 1;
-            min-height: 140px;
+            min-height: 8.75rem; /* 140px */
             max-width: 100%;
             overflow-x: auto;
-            border-radius: 8px;
+            border-radius: 0.5rem; /* 8px */
          }
         .playground-item {
-           width: 30px;
-           height: 30px;
+           width: 1.875rem; /* 30px */
+           height: 1.875rem; /* 30px */
            background: var(--accent-color);
            color: white;
-           border-radius: 6px;
+           border-radius: 0.375rem; /* 6px */
            display: flex;
            align-items: center;
            justify-content: center;
@@ -323,7 +323,7 @@ const FlexboxGridPlayground = ({ height, width }) => {
            gap: 0.25rem;
            background: var(--hover-color);
            padding: 0.75rem;
-           border-radius: 8px;
+           border-radius: 0.5rem; /* 8px */
         }
         .select-controls {
            display: flex;
@@ -344,11 +344,11 @@ const FlexboxGridPlayground = ({ height, width }) => {
              margin-bottom: 0.4rem;
           }
          .control-row input[type="number"] {
-            width: 70px;
+            width: 4.375rem; /* 70px */
             text-align: center;
          }
          .control-row select {
-            width: 90px;
+            width: 5.625rem; /* 90px */
             text-align: center;
          }
       `}</style>

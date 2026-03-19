@@ -60,8 +60,10 @@ function App() {
   const updateCols = () => {
     if (gridRef.current) {
       const width = gridRef.current.offsetWidth
-      const gap = 16 // 1rem
-      const minColWidth = 370 // Coincidir con el valor deseado por el usuario
+      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+      const gap = rootFontSize // 1rem
+      const minColWidth = rootFontSize * 23.125 // 370px en base 16px
+      
       const cols = Math.floor((width + gap) / (minColWidth + gap))
       const finalCols = Math.max(1, cols)
       
@@ -264,7 +266,7 @@ function App() {
                   zIndex: 200
                 }}
               >
-                <Grip size={14} />
+                <Grip size={14} className="size-14" />
               </div>
               {React.createElement(WIDGET_COMPONENTS[activeId], { height: activeH, width: activeW })}
             </div>

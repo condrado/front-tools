@@ -96,7 +96,7 @@ const AspectRatioCalculator = ({ height, width }) => {
             <input type="number" value={w2} onChange={handleW2Change} />
           </div>
           <div className="icon-link">
-             <MoveDiagonal size={16} />
+             <MoveDiagonal size={16} className="size-16" />
           </div>
           <div className="input-field">
             <label>Alto (px)</label>
@@ -104,7 +104,7 @@ const AspectRatioCalculator = ({ height, width }) => {
           </div>
           <div className="input-icon-wrapper">
             <button className="icon-copy-btn" onClick={copyResult} title="Copiar Dimensiones" style={{ height: '100%', width: '100%' }}>
-              {copied ? <Check size={16} /> : <Copy size={16} />}
+              {copied ? <Check size={16} className="size-16" /> : <Copy size={16} className="size-16" />}
             </button>
           </div>
         </div>
@@ -117,7 +117,7 @@ const AspectRatioCalculator = ({ height, width }) => {
       <div className="widget-header">
         <h3 className="widget-title">Calculadora de Ratio</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-          <Maximize2 size={16} />
+          <Maximize2 size={16} className="size-16" />
         </button>
       </div>
 
@@ -164,7 +164,7 @@ const AspectRatioCalculator = ({ height, width }) => {
           font-weight: bold;
         }
         .ratio-visualizer {
-          height: 140px;
+          height: 8.75rem; /* 140px */
           align-items: center;
           justify-content: center;
           padding: 1.5rem;
@@ -180,7 +180,7 @@ const AspectRatioCalculator = ({ height, width }) => {
         .ratio-box-inner {
           background: rgba(var(--accent-color-rgb), 0.15);
           border: 2px solid var(--accent-color);
-          border-radius: 6px;
+          border-radius: 0.375rem; /* 6px */
           display: flex;
           align-items: center;
           justify-content: center;
@@ -196,14 +196,14 @@ const AspectRatioCalculator = ({ height, width }) => {
         }
         .icon-link {
           opacity: 0.3;
-          height: 35px;
+          height: 2.1875rem; /* 35px */
           display: flex;
           align-items: center;
           justify-content: center;
         }
         .input-icon-wrapper {
-          height: 35px;
-          width: 35px;
+          height: 2.1875rem; /* 35px */
+          width: 2.1875rem; /* 35px */
           display: flex;
           align-items: center;
           justify-content: center;

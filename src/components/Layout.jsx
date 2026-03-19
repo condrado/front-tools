@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Moon, Sun, Github, Lock, Unlock } from 'lucide-react'
+import { Moon, Sun, Github, Lock, Unlock, Type } from 'lucide-react'
 import { usePersistentState } from '../hooks/usePersistentState'
 
 const Layout = ({ children }) => {
@@ -14,11 +14,19 @@ const Layout = ({ children }) => {
     lockedWidth: 1200
   })
 
+  const [fontSize, setFontSize] = usePersistentState('root_font_size', 16)
+
   const { isLocked, lockedWidth } = widthState
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}px`
+    // Disparar evento para que App.jsx recalcule el grid cuando cambie la fuente
+    window.dispatchEvent(new CustomEvent('width-lock-changed'))
+  }, [fontSize])
 
   const toggleTheme = () => {
     setThemeState({ mode: theme === 'light' ? 'dark' : 'light' })
@@ -52,13 +60,26 @@ const Layout = ({ children }) => {
               onClick={toggleWidthLock}
               title={isLocked ? "Desbloquear Ancho" : "Bloquear Ancho"}
             >
-              {isLocked ? <Lock size={18} /> : <Unlock size={18} />}
+              {isLocked ? <Lock size={18} className="size-18" /> : <Unlock size={18} className="size-18" />}
             </button>
+            <div className="font-size-control">
+              <Type size={18} className="font-icon size-18" />
+              <select 
+                value={fontSize} 
+                onChange={(e) => setFontSize(Number(e.target.value))}
+                className="font-select"
+                title="Cambiar tamaño de fuente"
+              >
+                {[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map(size => (
+                  <option key={size} value={size}>{size}px</option>
+                ))}
+              </select>
+            </div>
             <button className="theme-toggle" onClick={toggleTheme}>
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              {theme === 'light' ? <Moon size={20} className="size-20" /> : <Sun size={20} className="size-20" />}
             </button>
             <a href="https://github.com/condrado/front-tools" target="_blank" rel="noopener noreferrer" className="github-link">
-              <Github size={20} />
+              <Github size={20} className="size-20" />
             </a>
           </div>
         </div>
@@ -67,8 +88,8 @@ const Layout = ({ children }) => {
       <main 
         className="main-content-wrapper" 
         style={isLocked ? { 
-          minWidth: `${lockedWidth}px`, 
-          width: `${lockedWidth}px`,
+          minWidth: `${lockedWidth / 16}rem`, 
+          width: `${lockedWidth / 16}rem`,
           margin: '0 auto'
         } : {}}
       >
@@ -88,7 +109,6 @@ const Layout = ({ children }) => {
           min-height: 100vh;
           display: flex;
           flex-direction: column;
-          overflow-x: auto;
         }
         .main-content-wrapper {
           width: 100%;
@@ -147,6 +167,36 @@ const Layout = ({ children }) => {
           color: var(--accent-color);
           background: rgba(var(--accent-color-rgb), 0.1);
           opacity: 1;
+        }
+        .font-size-control {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: var(--hover-color);
+          padding: 0.25rem 0.5rem;
+          border-radius: 8px;
+          opacity: 0.8;
+          transition: var(--transition);
+        }
+        .font-size-control:hover {
+          opacity: 1;
+        }
+        .font-icon {
+          color: var(--text-color);
+          opacity: 0.6;
+        }
+        .font-select {
+          background: none;
+          border: none;
+          padding: 0.125rem;
+          font-size: 0.875rem;
+          color: var(--text-color);
+          cursor: pointer;
+          width: 4rem;
+        }
+        .font-select:focus {
+          outline: none;
+          box-shadow: none;
         }
         .main-content {
           flex: 1;

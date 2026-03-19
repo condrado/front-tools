@@ -38,7 +38,7 @@ const MultiplesOf8 = ({ height, width }) => {
       <div className="widget-header">
         <h3 className="widget-title">Múltiplos de 8</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-          <Maximize2 size={16} />
+          <Maximize2 size={16} className="size-16" />
         </button>
       </div>
 
@@ -58,10 +58,10 @@ const MultiplesOf8 = ({ height, width }) => {
         .multiples-grid {
           display: grid;
           grid-template-columns: repeat(8, 1fr);
-          gap: 1px;
+          gap: 0;
           background: var(--border-color);
           border: 1px solid var(--border-color);
-          border-radius: 4px;
+          border-radius: 0.25rem; /* 4px */
           overflow: visible;
         }
         .multiples-grid.is-modal {
@@ -92,7 +92,7 @@ const MultiplesOf8 = ({ height, width }) => {
           z-index: 50;
           transform: scale(2);
           box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-          border-radius: 4px;
+          border-radius: 0.25rem; /* 4px */
         }
         .number-card.copied {
           background: var(--accent-color);

@@ -47,7 +47,7 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
           cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
-        <Grip size={16} />
+        <Grip size={16} className="size-16" />
       </div>
 
       <div 
@@ -63,10 +63,12 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
           right: '3.5rem',
           zIndex: 200,
           cursor: 'pointer',
-          opacity: 0.3
+          opacity: 0.3,
+          display: 'flex',
+          padding: '0.25rem'
         }}
       >
-        <Settings size={15} />
+        <Settings size={15} className="size-15" />
       </div>
 
       {showSettings && (
@@ -76,15 +78,15 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
            right: '1rem',
            background: 'var(--card-bg)',
            border: '1px solid var(--border-color)',
-           borderRadius: '8px',
+           borderRadius: '0.5rem' /* 8px */,
            padding: '1rem',
            zIndex: 1000,
-           width: '180px',
+           width: '11.25rem', /* 180px */
            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)'
         }}>
            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>Ajustes Widget</span>
-              <X size={14} style={{ cursor: 'pointer', opacity: 0.5 }} onClick={() => setShowSettings(false)} />
+              <X size={14} className="size-14" style={{ cursor: 'pointer', opacity: 0.5 }} onClick={() => setShowSettings(false)} />
            </div>
            
            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -117,7 +119,7 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
                     background: 'var(--accent-color)', 
                     color: 'white', 
                     border: 'none', 
-                    borderRadius: '4px',
+                    borderRadius: '0.25rem' /* 4px */,
                     fontSize: '0.7rem',
                     fontWeight: '600',
                     display: 'flex',
@@ -127,7 +129,7 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
                     cursor: 'pointer'
                  }}
               >
-                 <Check size={14} /> Aplicar
+                  <Check size={14} className="size-14" /> Aplicar
               </button>
            </div>
         </div>

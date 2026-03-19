@@ -88,7 +88,7 @@ const ClampCalculator = ({ height, width }) => {
         <div className="result-box">
           <code>{codeContent}</code>
           <button className="icon-copy-btn" onClick={copyToClipboard} title="Copiar código">
-            {copied ? <Check size={16} /> : <Copy size={16} />}
+            {copied ? <Check size={16} className="size-16" /> : <Copy size={16} className="size-16" />}
           </button>
         </div>
       </div>
@@ -100,7 +100,7 @@ const ClampCalculator = ({ height, width }) => {
       <div className="widget-header">
         <h3 className="widget-title">Calculadora Clamp()</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-          <Maximize2 size={16} />
+          <Maximize2 size={16} className="size-16" />
         </button>
       </div>
 

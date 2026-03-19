@@ -94,7 +94,7 @@ const ShadowGenerator = ({ height, width }) => {
         <div className="result-box">
           <code>{codeContent}</code>
           <button className="icon-copy-btn" onClick={copyToClipboard} title="Copiar código">
-            {copied ? <Check size={16} /> : <Copy size={16} />}
+            {copied ? <Check size={16} className="size-16" /> : <Copy size={16} className="size-16" />}
           </button>
         </div>
       </div>
@@ -106,7 +106,7 @@ const ShadowGenerator = ({ height, width }) => {
       <div className="widget-header">
         <h3 className="widget-title">Generador de Sombras</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-          <Maximize2 size={16} />
+          <Maximize2 size={16} className="size-16" />
         </button>
       </div>
 
@@ -132,10 +132,10 @@ const ShadowGenerator = ({ height, width }) => {
           justify-content: center;
         }
         .preview-box {
-          width: 80px;
-          height: 80px;
+          width: 5rem; /* 80px */
+          height: 5rem; /* 80px */
           background: white;
-          border-radius: 12px;
+          border-radius: 0.75rem; /* 12px */
           display: flex;
           align-items: center;
           justify-content: center;
@@ -159,10 +159,10 @@ const ShadowGenerator = ({ height, width }) => {
           align-items: center;
         }
         .color-picker {
-          width: 40px !important;
-          height: 40px !important;
+          width: 2.5rem !important; /* 40px */
+          height: 2.5rem !important; /* 40px */
           padding: 0 !important;
-          border-radius: 6px !important;
+          border-radius: 0.375rem !important; /* 6px */
           cursor: pointer;
         }
         .color-text {
@@ -181,8 +181,8 @@ const ShadowGenerator = ({ height, width }) => {
         input[type="range"] {
           appearance: none;
           background: var(--border-color);
-          height: 4px;
-          border-radius: 2px;
+          height: 0.25rem; /* 4px */
+          border-radius: 0.125rem; /* 2px */
           width: 100%;
           outline: none;
           padding: 0;
@@ -190,8 +190,8 @@ const ShadowGenerator = ({ height, width }) => {
         }
         input[type="range"]::-webkit-slider-thumb {
           appearance: none;
-          width: 16px;
-          height: 16px;
+          width: 1rem; /* 16px */
+          height: 1rem; /* 16px */
           background: var(--accent-color);
           border-radius: 50%;
           cursor: pointer;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { ArrowRightLeft, Maximize2, Copy, Check } from 'lucide-react'
 import Modal from '../Modal'
 import { usePersistentState } from '../../hooks/usePersistentState'
@@ -75,13 +75,13 @@ const PxRemConverter = ({ height, width }) => {
               onClick={() => copyToClipboard(px, 'px')}
               title="Copiar con px"
             >
-              {copied === 'px' ? <Check size={14} /> : <Copy size={14} />}
+              {copied === 'px' ? <Check size={14} className="size-14" /> : <Copy size={14} className="size-14" />}
             </button>
           </div>
         </div>
 
         <div className="icon-wrapper">
-          <ArrowRightLeft size={20} className="conversion-icon" />
+          <ArrowRightLeft size={20} className="size-20 conversion-icon" />
         </div>
 
         <div className="input-group">
@@ -99,7 +99,7 @@ const PxRemConverter = ({ height, width }) => {
               onClick={() => copyToClipboard(rem, 'rem')}
               title="Copiar con rem"
             >
-              {copied === 'rem' ? <Check size={14} /> : <Copy size={14} />}
+              {copied === 'rem' ? <Check size={14} className="size-14" /> : <Copy size={14} className="size-14" />}
             </button>
           </div>
         </div>
@@ -126,7 +126,7 @@ const PxRemConverter = ({ height, width }) => {
       <div className="widget-header">
         <h3 className="widget-title">Conversor Px/REM</h3>
         <button className="maximize-btn" onClick={() => setIsModalOpen(true)}>
-          <Maximize2 size={16} />
+          <Maximize2 size={16} className="size-16" />
         </button>
       </div>
 
@@ -176,7 +176,7 @@ const PxRemConverter = ({ height, width }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 4px;
+          border-radius: 0.25rem; /* 4px */
         }
         .copy-input-btn:hover {
           opacity: 1;
@@ -193,7 +193,6 @@ const PxRemConverter = ({ height, width }) => {
           margin-bottom: 0.4rem;
         }
         .icon-wrapper {
-          padding-bottom: 0.75rem;
           color: var(--accent-color);
         }
         .reference-section {
@@ -208,7 +207,7 @@ const PxRemConverter = ({ height, width }) => {
         }
         .base-input-wrapper {
           position: relative;
-          max-width: 120px;
+          max-width: 7.5rem; /* 120px */
         }
         .base-input {
           padding-right: 2.5rem;
@@ -234,7 +233,6 @@ const PxRemConverter = ({ height, width }) => {
           }
           .icon-wrapper {
             transform: rotate(90deg);
-            padding: 0.5rem;
           }
         }
       `}</style>
