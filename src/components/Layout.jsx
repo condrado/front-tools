@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Type, Moon, Sun, Github, Settings, ChevronRight, Lock, Unlock } from 'lucide-react'
+import { Type, Moon, Sun, Github, Settings, ChevronRight, Lock, Unlock, RotateCcw, Download, Upload } from 'lucide-react'
 import { usePersistentState } from '../hooks/usePersistentState'
 
 const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWidget }) => {
   const [fontSize, setFontSize] = usePersistentState('page_font_size_v1', 16)
   const [theme, setTheme] = usePersistentState('page_theme_v1', 'dark')
   const [isWidthLocked, setIsWidthLocked] = usePersistentState('page_width_lock_v1', false)
+  const [lockedWidth, setLockedWidth] = usePersistentState('page_locked_width_v1', null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const settingsRef = useRef(null)
 
@@ -50,7 +51,14 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
           <div className="nav-right">
             <button 
               className={`nav-icon-btn ${isWidthLocked ? 'active' : ''}`} 
-              onClick={() => setIsWidthLocked(!isWidthLocked)}
+              onClick={() => {
+                if (!isWidthLocked) {
+                  setLockedWidth(window.innerWidth)
+                } else {
+                  setLockedWidth(null)
+                }
+                setIsWidthLocked(!isWidthLocked)
+              }}
               title={isWidthLocked ? "Desbloquear ancho" : "Bloquear ancho"}
             >
               {isWidthLocked ? <Lock size={20} className="size-20" /> : <Unlock size={20} className="size-20" />}
@@ -120,6 +128,82 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
                       ))}
                     </div>
                   </div>
+
+                  <div className="dropdown-divider"></div>
+
+                  <div className="dropdown-section">
+                    <h4 className="dropdown-title">Configuración</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                      <button 
+                        className="action-btn"
+                        title="Exportar configuración"
+                        onClick={() => {
+                          const data = JSON.stringify(localStorage, null, 2);
+                          const blob = new Blob([data], { type: 'application/json' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `front-tools-config-${new Date().toISOString().split('T')[0]}.json`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        }}
+                      >
+                        <Download size={14} className="size-14" />
+                        <span>Exportar</span>
+                      </button>
+                      <button 
+                        className="action-btn"
+                        title="Importar configuración"
+                        onClick={() => document.getElementById('import-config').click()}
+                      >
+                        <Upload size={14} className="size-14" />
+                        <span>Importar</span>
+                      </button>
+                      <input 
+                        id="import-config"
+                        type="file"
+                        accept=".json"
+                        style={{ display: 'none' }}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            try {
+                              const config = JSON.parse(event.target.result);
+                              if (confirm('Esto sobreescribirá tu configuración actual. ¿Continuar?')) {
+                                Object.keys(config).forEach(key => {
+                                  localStorage.setItem(key, config[key]);
+                                });
+                                window.location.reload();
+                              }
+                            } catch (err) {
+                              alert('Error al importar el archivo JSON.');
+                            }
+                          };
+                          reader.readAsText(file);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="dropdown-divider"></div>
+
+                  <div className="dropdown-section">
+                    <h4 className="dropdown-title">Sistema</h4>
+                    <button 
+                      className="reset-btn"
+                      onClick={() => {
+                        if (confirm('¿Estás seguro de que quieres resetear toda la configuración?')) {
+                           localStorage.clear();
+                           window.location.reload();
+                        }
+                      }}
+                    >
+                      <RotateCcw size={14} className="size-14" />
+                      <span>Limpiar Datos</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -132,7 +216,14 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
       </nav>
 
       <main className="main-content-wrapper">
-        <div className="page-container">
+        <div 
+          className="page-container" 
+          style={isWidthLocked && lockedWidth ? { 
+            width: `${lockedWidth}px`, 
+            maxWidth: `${lockedWidth}px`,
+            margin: '0 auto',
+            overflowX: 'hidden'
+          } : {}}>
           {children}
         </div>
       </main>
@@ -153,8 +244,7 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
           padding: 0.75rem 0;
         }
         .nav-container {
-          max-width: 1400px;
-          margin: 0 auto;
+          padding: 0 1.5rem;
           padding: 0 1.5rem;
           display: flex;
           align-items: center;
@@ -323,6 +413,60 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
           justify-content: space-between;
           padding: 0.15rem 0;
         }
+
+        .reset-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.6rem;
+          background: var(--hover-color);
+          color: var(--text-color);
+          border: 1px solid var(--border-color);
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 0.75rem;
+          font-weight: 500;
+          opacity: 0.8;
+        }
+
+        .reset-btn:hover {
+          background: #fee2e2;
+          color: #ef4444;
+          border-color: #fecaca;
+          opacity: 1;
+        }
+
+        [data-theme='dark'] .reset-btn:hover {
+           background: #450a0a;
+           color: #f87171;
+           border-color: #7f1d1d;
+        }
+
+        .action-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          padding: 0.6rem;
+          background: var(--hover-color);
+          color: var(--text-color);
+          border: 1px solid var(--border-color);
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .action-btn:hover {
+           background: var(--card-bg);
+           color: var(--accent-color);
+           border-color: var(--accent-color);
+           box-shadow: 0 4px 6px -1px rgba(var(--accent-color-rgb), 0.1);
+        }
         
         /* Switch Styles */
         .switch {
@@ -369,9 +513,12 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
           flex: 1;
           background: var(--bg-color);
         }
-        .page-container {
-          max-width: 1400px;
+        :global(body.width-locked) .page-container,
+        :global(body.width-locked) .nav-container {
           margin: 0 auto;
+        }
+        .page-container {
+        }
         }
       `}</style>
     </div>

@@ -114,7 +114,7 @@ svg.size-24 { width: 1.5rem !important; height: 1.5rem !important; }
 }
 
 @media (max-width: 480px) {
-  .dashboard-grid {
+  body:not(.width-locked) .dashboard-grid {
     grid-template-columns: 1fr;
   }
 }

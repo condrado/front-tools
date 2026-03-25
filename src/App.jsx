@@ -37,7 +37,7 @@ const WIDGET_HEIGHTS = {
   clamp: 5,
   shadow: 9,
   aspect: 6,
-  flex: 11,
+  flex: 12,
   breakpoints: 6
 }
 
@@ -73,10 +73,10 @@ function App() {
       const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
       const gap = rootFontSize // 1rem
       const minColWidth = rootFontSize * 23.125 // 370px en base 16px
-      
+
       const cols = Math.floor((width + gap) / (minColWidth + gap))
       const finalCols = Math.max(1, cols)
-      
+
       setDynamicCols(finalCols)
     }
   }
@@ -90,7 +90,7 @@ function App() {
     updateCols()
     window.addEventListener('resize', updateCols)
     window.addEventListener('width-lock-changed', handleWidthLockChange)
-    
+
     return () => {
       window.removeEventListener('resize', updateCols)
       window.removeEventListener('width-lock-changed', handleWidthLockChange)
@@ -128,7 +128,7 @@ function App() {
     for (const widget of sorted) {
       let { x, y, w } = widget
       const h = widget.h || WIDGET_HEIGHTS[widget.id]
-      
+
       // Si está fuera de rango o colisiona, buscamos sitio
       if (x + w > cols || !isAreaFree(x, y, w, h)) {
         let found = false
@@ -240,8 +240,8 @@ function App() {
   }
 
   return (
-    <Layout 
-      widgetsCatalog={WIDGET_CATALOG} 
+    <Layout
+      widgetsCatalog={WIDGET_CATALOG}
       activeWidgets={widgets.map(w => w.id)}
       onToggleWidget={handleToggleWidget}
     >
@@ -252,7 +252,7 @@ function App() {
         onDragEnd={handleDragEnd}
         onDragCancel={() => setActiveId(null)}
       >
-        <div 
+        <div
           ref={gridRef}
           className={`dashboard-grid ${activeId ? 'dragging' : ''}`}
           style={{ '--cols': dynamicCols }}
@@ -261,42 +261,54 @@ function App() {
           {gridCells}
 
           {/* Widgets */}
-          {widgets.map((widget) => (
-            <DraggableWidget 
-              key={widget.id} 
-              id={widget.id} 
-              x={widget.x}
-              y={widget.y}
-              w={widget.w}
-              h={widget.h}
-              onUpdateSize={(newW, newH) => updateWidgetSize(widget.id, newW, newH)}
-            >
-              {React.createElement(WIDGET_COMPONENTS[widget.id])}
-            </DraggableWidget>
-          ))}
+          {widgets.map((widget) => {
+            const WidgetComponent = WIDGET_COMPONENTS[widget.id]
+            if (!WidgetComponent) {
+              console.warn(`Widget no encontrado: ${widget.id}. Es posible que necesites limpiar el localStorage o revisar las IDs.`)
+              return null
+            }
+            return (
+              <DraggableWidget
+                key={widget.id}
+                id={widget.id}
+                x={widget.x}
+                y={widget.y}
+                w={widget.w}
+                h={widget.h}
+                onUpdateSize={(newW, newH) => updateWidgetSize(widget.id, newW, newH)}
+              >
+                {React.createElement(WidgetComponent)}
+              </DraggableWidget>
+            )
+          })}
         </div>
 
         <DragOverlay dropAnimation={dropAnimationConfig}>
           {activeId ? (
-            <div 
-              style={{ 
+            <div
+              style={{
                 cursor: 'grabbing',
                 width: activeWidth ? `${activeWidth}px` : '100%',
                 position: 'relative'
               }}
             >
-              <div 
-                className="drag-handle" 
-                style={{ 
-                  position: 'absolute', 
-                  top: '1.6rem', 
+              <div
+                className="drag-handle"
+                style={{
+                  position: 'absolute',
+                  top: '1.6rem',
                   left: '0.75rem',
                   zIndex: 200
                 }}
               >
                 <Grip size={14} className="size-14" />
               </div>
-              {React.createElement(WIDGET_COMPONENTS[activeId], { height: activeH, width: activeW })}
+              {(() => {
+                const ActiveComponent = WIDGET_COMPONENTS[activeId]
+                return ActiveComponent ? (
+                  React.createElement(ActiveComponent, { height: activeH, width: activeW })
+                ) : null
+              })()}
             </div>
           ) : null}
         </DragOverlay>
