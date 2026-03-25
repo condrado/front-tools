@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Type, Moon, Sun, Github, Settings, ChevronRight, Lock, Unlock, RotateCcw, Download, Upload } from 'lucide-react'
+import { Type, Moon, Sun, Github, Settings, ChevronRight, Lock, Unlock, RotateCcw, Download, Upload, LayoutGrid, Plus, Trash2 } from 'lucide-react'
 import { usePersistentState } from '../hooks/usePersistentState'
 
 const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWidget }) => {
@@ -8,7 +8,10 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
   const [isWidthLocked, setIsWidthLocked] = usePersistentState('page_width_lock_v1', false)
   const [lockedWidth, setLockedWidth] = usePersistentState('page_locked_width_v1', null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isTemplatesOpen, setIsTemplatesOpen] = useState(false)
+  const [templates, setTemplates] = usePersistentState('page_templates_v1', [])
   const settingsRef = useRef(null)
+  const templatesRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -30,6 +33,9 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
     const handleClickOutside = (event) => {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
         setIsSettingsOpen(false)
+      }
+      if (templatesRef.current && !templatesRef.current.contains(event.target)) {
+        setIsTemplatesOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -63,7 +69,102 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
             >
               {isWidthLocked ? <Lock size={20} className="size-20" /> : <Unlock size={20} className="size-20" />}
             </button>
-            
+
+            <div className="settings-wrapper" ref={templatesRef}>
+              <button 
+                className={`nav-icon-btn ${isTemplatesOpen ? 'active' : ''}`} 
+                onClick={() => setIsTemplatesOpen(!isTemplatesOpen)}
+                title="Plantillas guardadas"
+              >
+                <LayoutGrid size={20} className="size-20" />
+              </button>
+
+              {isTemplatesOpen && (
+                <div className="settings-dropdown templates-dropdown">
+                  <div className="dropdown-section" style={{ marginBottom: 0 }}>
+                    <h4 className="dropdown-title">Mis Plantillas</h4>
+                    
+                    <div className="templates-list">
+                      {templates.length === 0 ? (
+                        <p className="empty-text">No tienes plantillas guardadas</p>
+                      ) : (
+                        templates.map(tpl => (
+                          <div key={tpl.id} className="template-item">
+                            <button 
+                              className="template-load-btn"
+                              onClick={() => {
+                                if (confirm(`¿Cargar plantilla "${tpl.name}"?`)) {
+                                  // En lugar de clear(), borramos quirúrgicamente todo excepto las plantillas
+                                  Object.keys(localStorage).forEach(key => {
+                                    if (key !== 'widget_state_page_templates_v1') {
+                                      localStorage.removeItem(key);
+                                    }
+                                  });
+
+                                  // Restaurar configuración de la plantilla seleccionada
+                                  Object.keys(tpl.config).forEach(key => {
+                                    // Protección extra: Ignoramos la clave de plantillas si viniera en el config
+                                    if (key !== 'widget_state_page_templates_v1') {
+                                      localStorage.setItem(key, tpl.config[key]);
+                                    }
+                                  });
+
+                                  window.location.reload();
+                                }
+                              }}
+                            >
+                              {tpl.name}
+                            </button>
+                            <button 
+                              className="template-delete-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm('¿Eliminar esta plantilla?')) {
+                                  setTemplates(templates.filter(t => t.id !== tpl.id));
+                                }
+                              }}
+                            >
+                              <Trash2 size={12} className="size-12" />
+                            </button>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="dropdown-divider"></div>
+
+                  <div className="dropdown-section">
+                    <button 
+                      className="template-action-btn"
+                      onClick={() => {
+                        const name = prompt('Nombre de la plantilla:');
+                        if (name) {
+                          const config = {};
+                          // No guardamos las plantillas dentro de las plantillas (evita recursividad)
+                          Object.keys(localStorage).forEach(key => {
+                            if (key !== 'widget_state_page_templates_v1') {
+                              config[key] = localStorage.getItem(key);
+                            }
+                          });
+
+                          const newTemplate = {
+                            id: Date.now(),
+                            name,
+                            config
+                          };
+                          setTemplates([...templates, newTemplate]);
+                        }
+                      }}
+                    >
+                      <Plus size={14} className="size-14" />
+                      <span>Nueva Plantilla</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="settings-wrapper" ref={settingsRef}>
               <button 
                 className={`nav-icon-btn ${isSettingsOpen ? 'active' : ''}`} 
@@ -235,13 +336,15 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
           flex-direction: column;
         }
         .sticky-nav {
-          position: sticky;
+          position: fixed;
           top: 0;
+          left: 0;
           z-index: 1000;
           background: rgba(var(--bg-rgb, 255, 255, 255), 0.8);
           backdrop-filter: blur(12px);
           border-bottom: 1px solid var(--border-color);
           padding: 0.75rem 0;
+          width: 100%;
         }
         .nav-container {
           padding: 0 1.5rem;
@@ -445,6 +548,99 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
            border-color: #7f1d1d;
         }
 
+        .templates-dropdown {
+          width: 220px;
+        }
+
+        .icon-add-btn {
+          display: none;
+        }
+
+        .template-action-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.6rem;
+          background: var(--hover-color);
+          color: var(--text-color);
+          border: 1px solid var(--border-color);
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 0.75rem;
+          font-weight: 500;
+          opacity: 0.8;
+        }
+
+        .template-action-btn:hover {
+          background: var(--bg-color);
+          color: var(--accent-color);
+          border-color: var(--accent-color);
+          opacity: 1;
+        }
+
+        .templates-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+
+        .template-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: var(--hover-color);
+          border-radius: 0.5rem;
+          padding: 0.25rem 0.5rem;
+          transition: var(--transition);
+        }
+
+        .template-item:hover {
+          background: var(--border-color);
+        }
+
+        .template-load-btn {
+          flex: 1;
+          text-align: left;
+          background: none;
+          border: none;
+          color: var(--text-color);
+          padding: 0.4rem;
+          font-size: 0.8rem;
+          font-weight: 500;
+          cursor: pointer;
+        }
+
+        .template-delete-btn {
+          background: none;
+          border: none;
+          color: var(--text-color);
+          opacity: 0.3;
+          padding: 0.4rem;
+          border-radius: 0.25rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+        }
+
+        .template-delete-btn:hover {
+          opacity: 1;
+          background: #fee2e2;
+          color: #ef4444;
+        }
+
+        .empty-text {
+          font-size: 0.75rem;
+          opacity: 0.5;
+          text-align: center;
+          padding: 1rem 0;
+        }
+
         .action-btn {
           display: flex;
           align-items: center;
@@ -512,6 +708,7 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
         .main-content-wrapper {
           flex: 1;
           background: var(--bg-color);
+          padding-top: 4.5rem; /* Altura de la nav fija */
         }
         :global(body.width-locked) .page-container,
         :global(body.width-locked) .nav-container {

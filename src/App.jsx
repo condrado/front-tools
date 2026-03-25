@@ -17,6 +17,7 @@ import ShadowGenerator from './components/widgets/ShadowGenerator'
 import AspectRatioCalculator from './components/widgets/AspectRatioCalculator'
 import FlexboxGridPlayground from './components/widgets/FlexboxGridPlayground'
 import BreakpointsInfo from './components/widgets/BreakpointsInfo'
+import ColorPicker from './components/widgets/ColorPicker'
 import DraggableWidget from './components/DraggableWidget'
 import GridCell from './components/GridCell'
 import { usePersistentState } from './hooks/usePersistentState'
@@ -29,6 +30,7 @@ const WIDGET_COMPONENTS = {
   aspect: AspectRatioCalculator,
   flex: FlexboxGridPlayground,
   breakpoints: BreakpointsInfo,
+  color: ColorPicker,
 }
 
 const WIDGET_HEIGHTS = {
@@ -38,17 +40,19 @@ const WIDGET_HEIGHTS = {
   shadow: 9,
   aspect: 6,
   flex: 12,
-  breakpoints: 6
+  breakpoints: 6,
+  color: 8,
 }
 
 const WIDGET_CATALOG = [
-  { id: 'multiples', name: 'Múltiplos de 8' },
+  { id: 'multiples', name: 'Múltiplos' },
   { id: 'converter', name: 'Conversor Px/REM' },
   { id: 'clamp', name: 'Calculadora Clamp' },
   { id: 'aspect', name: 'Ratio de Aspecto' },
   { id: 'breakpoints', name: 'Info Breakpoints' },
   { id: 'shadow', name: 'Generador de Sombras' },
   { id: 'flex', name: 'Playground Flex/Grid' },
+  { id: 'color', name: 'Selector de Color' },
 ]
 
 const ROWS = 40
@@ -63,6 +67,16 @@ function App() {
     { id: 'shadow', x: 2, y: 6, w: 1 },
     { id: 'flex', x: 0, y: 14, w: 1 },
   ])
+
+  // Migración automática de altura para el Color Picker
+  useEffect(() => {
+    const needsMigration = widgets.some(w => w.id === 'color' && w.h === 12)
+    if (needsMigration) {
+      setWidgets(prev => prev.map(w => 
+        (w.id === 'color' && w.h === 12) ? { ...w, h: 8 } : w
+      ))
+    }
+  }, [widgets, setWidgets])
 
   const [dynamicCols, setDynamicCols] = useState(0) // 0 significa "no medido aún"
   const gridRef = useRef(null)
