@@ -98,6 +98,7 @@ const MultiplesOf8 = ({ height, width }) => {
           padding: 0.3rem 0;
           background: var(--card-bg);
           border: none;
+          outline: 1px solid var(--border-color);
           cursor: pointer;
           transition: all 0.1s;
           position: relative;

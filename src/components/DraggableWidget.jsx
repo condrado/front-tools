@@ -41,7 +41,7 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
         {...listeners}
         style={{
           position: 'absolute',
-          top: '2rem',
+          top: id === 'multiples' ? '2rem' : '1.55rem',
           left: '0.75rem',
           zIndex: 200,
           cursor: isDragging ? 'grabbing' : 'grab'
@@ -59,7 +59,7 @@ const DraggableWidget = ({ id, children, x, y, w, h, onUpdateSize }) => {
         }}
         style={{
           position: 'absolute',
-          top: '2rem',
+          top: id === 'multiples' ? '2rem' : '1.55rem',
           right: '3.5rem',
           zIndex: 200,
           cursor: 'pointer',
