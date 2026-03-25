@@ -208,7 +208,7 @@ const Layout = ({ children, widgetsCatalog = [], activeWidgets = [], onToggleWid
               )}
             </div>
 
-            <a href="https://github.com/conradopm/front-tools" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="GitHub">
+            <a href="https://github.com/condrado/front-tools" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="GitHub">
               <Github size={20} className="size-20" />
             </a>
           </div>
